@@ -6,12 +6,23 @@
 #include "Components/PhysicsComponents.h"
 #include "Components/SpriteComponent.h"
 #include "Components/PlayerComponent.h"
+#include "Core/Factory.h"
 
 nc::Engine engine;
 nc::GameObject player;
+nc::Factory<nc::Object, std::string> objectFactory;
 
 int main(int, char**)
 {
+	engine.Startup();
+
+	objectFactory.Register("GameObject", nc::Object::Instantiate<nc::GameObject>);
+	objectFactory.Register("PhysicsComponent", nc::Object::Instantiate<nc::PhysicsComponent>);
+	objectFactory.Register("PlayerComponent", nc::Object::Instantiate<nc::PlayerComponent>);
+	objectFactory.Register("SpriteComponent", nc::Object::Instantiate<nc::SpriteComponent>);
+
+	nc::GameObject* player = objectFactory.Create<nc::GameObject>("GameObject");
+
 	rapidjson::Document document;
 	nc::json::Load("json.txt", document);
 
@@ -44,24 +55,23 @@ int main(int, char**)
 	std::cout << color << std::endl;
 
 
-	engine.Startup();
 
-	player.Create(&engine);
+	player->Create(&engine);
 	nc::json::Load("player.txt", document);
-	player.Read(document);
+	player->Read(document);
 
-	nc::Component* component = new nc::PhysicsComponent;
-	player.AddComponent(component);
+	nc::Component* component = objectFactory.Create<nc::Component>("PhysicsComponent");
+	player->AddComponent(component);
 	component->Create();
 
-	component = new nc::SpriteComponent;
-	player.AddComponent(component);
+	component = objectFactory.Create<nc::Component>("SpriteComponent");
+	player->AddComponent(component);
 	nc::json::Load("sprite.txt", document);
 	component->Read(document);
 	component->Create();
 
-	component = new nc::PlayerComponent;
-	player.AddComponent(component);
+	component = objectFactory.Create<nc::Component>("PlayerComponent");
+	player->AddComponent(component);
 	component->Create();
 	//texture
 	
@@ -81,7 +91,7 @@ int main(int, char**)
 
 		//update
 		engine.Update();
-		player.Update();
+		player->Update();
 
 
 
@@ -91,7 +101,7 @@ int main(int, char**)
 		
 		background->Draw({ 0, 0 }, {1.0f, 1.0f }, 0);
 		
-		player.Draw();
+		player->Draw();
 
 		engine.GetSystem<nc::Renderer>()->EndFrame();//END
 	}
