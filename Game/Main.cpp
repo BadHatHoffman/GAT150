@@ -1,46 +1,72 @@
 #include "pch.h"
 #include "Graphics/Texture.h"
+#include "Engine.h"
+#include "Objects/GameObject.h"
+#include "Core/Json.h"
+#include "Components/PhysicsComponents.h"
+#include "Components/SpriteComponent.h"
+#include "Components/PlayerComponent.h"
+
+nc::Engine engine;
+nc::GameObject player;
 
 int main(int, char**)
 {
-	if (SDL_Init(SDL_INIT_VIDEO) != 0)
-	{
-		std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
-		return 1;
-	}
+	rapidjson::Document document;
+	nc::json::Load("json.txt", document);
 
-	IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
+	std::string str;
+	nc::json::Get(document, "string", str);
+	std::cout << str << std::endl;
 
-	SDL_Window* window = SDL_CreateWindow("GAT150", 100, 100, 800, 600, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-	if (window == nullptr) 
-	{
-		std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
-		SDL_Quit();
-		return 1;
-	}
+	bool b;
+	nc::json::Get(document, "bool", b);
+	std::cout << b << std::endl;
 
-	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-	if (renderer == nullptr)
-	{
-		std::cout << "Error: " << SDL_GetError() << std::endl;
-		SDL_Quit();
-		return 1;
-	}
-	
-	//create textures
-	int width = 128;
-	int height = 128;
+	int i1;
+	nc::json::Get(document, "integer1", i1);
+	std::cout << i1 << std::endl;
 
-	SDL_Texture* texture1 = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STATIC, width, height);
-	Uint32* pixels = new Uint32[width * height];
-	memset(pixels, 255, width * height * sizeof(Uint32));
-	SDL_UpdateTexture(texture1, NULL, pixels, width * sizeof(Uint32));
-	
+	int i2;
+	nc::json::Get(document, "integer2", i2);
+	std::cout << i2 << std::endl;
+
+	float f;
+	nc::json::Get(document, "float", f);
+	std::cout << f << std::endl;
+
+	nc::Vector2 v2;
+	nc::json::Get(document, "vector2", v2);
+	std::cout << v2 << std::endl;
+
+	nc::Color color;
+	nc::json::Get(document, "color", color);
+	std::cout << color << std::endl;
+
+
+	engine.Startup();
+
+	player.Create(&engine);
+	nc::json::Load("player.txt", document);
+	player.Read(document);
+
+	nc::Component* component = new nc::PhysicsComponent;
+	player.AddComponent(component);
+	component->Create();
+
+	component = new nc::SpriteComponent;
+	player.AddComponent(component);
+	nc::json::Load("sprite.txt", document);
+	component->Read(document);
+	component->Create();
+
+	component = new nc::PlayerComponent;
+	player.AddComponent(component);
+	component->Create();
 	//texture
-	nc::Texture texture;
-	texture.Create("sf2.png", renderer);
-	float angle{ 0 };
-
+	
+	nc::Texture* background = engine.GetSystem<nc::ResourceManager>()->Get<nc::Texture>("background.png", engine.GetSystem<nc::Renderer>());
+	
 	SDL_Event event;
 	bool quit = false;
 	while (!quit)
@@ -53,36 +79,24 @@ int main(int, char**)
 			break;
 		}
 
-		SDL_SetRenderDrawColor(renderer, 0,255,144,255);
-		SDL_RenderClear(renderer);
+		//update
+		engine.Update();
+		player.Update();
+
+
+
 
 		//draw
+		engine.GetSystem<nc::Renderer>()->BeginFrame();
+		
+		background->Draw({ 0, 0 }, {1.0f, 1.0f }, 0);
+		
+		player.Draw();
 
-		for (size_t i = 0; i < width * height; i++)
-		{
-			Uint8 c = rand() % 256;
-			pixels[i] = (c << 24 | c << 16 | c << 8);
-		}
-
-		//pixel memory = (8/8/8/8), (8/8/8/8)
-		//pixel memory = (c/c/c/0), (c/c/c/0)
-
-		SDL_UpdateTexture(texture1, NULL, pixels, width * sizeof(Uint32));
-		SDL_Rect rect;
-		rect.x = 200;
-		rect.y = 200;
-		rect.w = width;
-		rect.h = height;
-		SDL_RenderCopy(renderer, texture1, NULL, &rect);
-
-		angle = angle + 0.1f;
-		texture.Draw({ 500,100 }, { 3.0f, 3.0f }, angle);
-
-		SDL_RenderPresent(renderer);
+		engine.GetSystem<nc::Renderer>()->EndFrame();//END
 	}
 	
-	IMG_Quit();
-	SDL_Quit();
+	engine.Shutdown();
 
 	return 0;
 }

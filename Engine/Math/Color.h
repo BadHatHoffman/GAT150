@@ -1,4 +1,5 @@
 #pragma once
+#include <SDL.h>
 #include <windows.h>
 #include <iostream>
 
@@ -40,6 +41,8 @@ namespace nc
 		Color& operator /= (float s) { r /= s; g /= s; b /= s; return *this; }
 
 		friend std::istream& operator >> (std::istream& stream, Color& c);
+		friend std::ostream& operator << (std::ostream& stream, Color& c);
+
 		SDL_Color Pack888() const;
 
 
