@@ -15,6 +15,7 @@ namespace nc
 		virtual void Destroy() override;
 
 		void Read(const rapidjson::Value& value) override;
+		void ReadComponents(const rapidjson::Value& value);
 
 		void Update();
 		void Draw();
@@ -40,6 +41,7 @@ namespace nc
 		friend class PhysicsComponent;
 
 	public: 
+		std::string m_name;
 		Transform m_transform;
 		Engine* m_engine;
 

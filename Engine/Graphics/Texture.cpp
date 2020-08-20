@@ -5,7 +5,6 @@
 
 namespace nc
 {
-
 	bool nc::Texture::Create(const std::string& name, void* renderer)
 	{
 		m_renderer = static_cast<Renderer*>(renderer)->m_renderer;
@@ -31,10 +30,12 @@ namespace nc
 		SDL_DestroyTexture(m_texture);
 	}
 
-	void nc::Texture::Draw(const Vector2& position, const Vector2& scale, float angle)
+	void nc::Texture::Draw(const Vector2& position, float angle, const Vector2& scale, const Vector2& origin)
 	{
 		Vector2 size = GetSize();
 		size = size * scale;
+
+		Vector2 newPosition = position - (size * origin);
 
 		SDL_Rect rect;
 		rect.x = static_cast<int>(position.x);
@@ -45,10 +46,12 @@ namespace nc
 		SDL_RenderCopyEx(m_renderer, m_texture, nullptr, &rect, angle, nullptr, SDL_FLIP_NONE);
 	}
 
-	void Texture::Draw(const SDL_Rect& source, const Vector2& position, const Vector2& scale, float angle)
+	void Texture::Draw(const SDL_Rect& source, const Vector2& position, float angle, const Vector2& scale, const Vector2& origin)
 	{
 		Vector2 size = { source.w, source.h };
 		size = size * scale;
+
+		Vector2 newPosition = position - (size * origin);
 
 		SDL_Rect rect;
 		rect.x = static_cast<int>(position.x);
