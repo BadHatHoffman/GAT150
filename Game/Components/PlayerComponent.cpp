@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "PlayerComponent.h"
-#include "Components/PhysicsComponents.h"
+#include "Components/RigidBodyComponent.h"
 
 namespace nc
 {
@@ -17,23 +17,23 @@ namespace nc
 	void nc::PlayerComponent::Update()
 	{
 		//player controller
+		nc::Vector2 force{ 0,0 };
 		if (m_owner->m_engine->GetSystem<nc::InputSystem>()->GetButtonState(SDL_SCANCODE_A) == nc::InputSystem::eButtonState::HELD)
 		{
-			m_owner->m_transform.angle = m_owner->m_transform.angle - 200.0f * m_owner->m_engine->GetTimer().DeltaTime();
+			force.x = -200000;
+			//m_owner->m_transform.angle = m_owner->m_transform.angle - 200.0f * m_owner->m_engine->GetTimer().DeltaTime();
 		}
 		if (m_owner->m_engine->GetSystem<nc::InputSystem>()->GetButtonState(SDL_SCANCODE_D) == nc::InputSystem::eButtonState::HELD)
 		{
-			m_owner->m_transform.angle = m_owner->m_transform.angle + 200.0f * m_owner->m_engine->GetTimer().DeltaTime();
+			force.x = 200000;
+			//m_owner->m_transform.angle = m_owner->m_transform.angle + 200.0f * m_owner->m_engine->GetTimer().DeltaTime();
 		}
-
-		nc::Vector2 force{ 0,0 };
-		if (m_owner->m_engine->GetSystem<nc::InputSystem>()->GetButtonState(SDL_SCANCODE_W) == nc::InputSystem::eButtonState::HELD)
+		if (m_owner->m_engine->GetSystem<nc::InputSystem>()->GetButtonState(SDL_SCANCODE_SPACE) == nc::InputSystem::eButtonState::PRESSED)
 		{
-			force = nc::Vector2::forward * 1000.0f;
+			force.y = -2000000;
 		}
-		force = nc::Vector2::Rotate(force, nc::DegreesToRadians(m_owner->m_transform.angle));
 
-		PhysicsComponent* component = m_owner->GetComponent<PhysicsComponent>();
+		PhysicsComponent* component = m_owner->GetComponent<RigidBodyComponent>();
 		if (component)
 		{
 			component->ApplyForce(force);

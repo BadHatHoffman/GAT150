@@ -38,8 +38,8 @@ namespace nc
 		Vector2 newPosition = position - (size * origin);
 
 		SDL_Rect rect;
-		rect.x = static_cast<int>(position.x);
-		rect.y = static_cast<int>(position.y);
+		rect.x = static_cast<int>(newPosition.x);
+		rect.y = static_cast<int>(newPosition.y);
 		rect.w = static_cast<int>(size.x);
 		rect.h = static_cast<int>(size.y);
 
@@ -54,8 +54,8 @@ namespace nc
 		Vector2 newPosition = position - (size * origin);
 
 		SDL_Rect rect;
-		rect.x = static_cast<int>(position.x);
-		rect.y = static_cast<int>(position.y);
+		rect.x = static_cast<int>(newPosition.x);
+		rect.y = static_cast<int>(newPosition.y);
 		rect.w = static_cast<int>(size.x);
 		rect.h = static_cast<int>(size.y);
 
