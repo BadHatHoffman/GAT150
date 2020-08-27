@@ -1,6 +1,8 @@
 #pragma once
+
 #include "Core/System.h"
 #include "Resource.h"
+
 #include <map>
 
 namespace nc
@@ -12,7 +14,7 @@ namespace nc
 		virtual void Shutdown() override;
 		virtual void Update() override;
 
-		template<typename T>
+		template <typename T>
 		T* Get(const std::string& name, void* data = nullptr);
 
 		void RemoveAll();
@@ -20,6 +22,7 @@ namespace nc
 	protected:
 		std::map<std::string, Resource*> m_resources;
 	};
+
 	template<typename T>
 	inline T* ResourceManager::Get(const std::string& name, void* data)
 	{

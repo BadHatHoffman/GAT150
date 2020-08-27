@@ -18,9 +18,6 @@
     <Filter Include="Core">
       <UniqueIdentifier>{64b7631f-3f4c-4b7b-b837-35b573fb4d49}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resources">
-      <UniqueIdentifier>{afd13e63-0472-4274-959a-b3bf4251a2bf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Input">
       <UniqueIdentifier>{98df5407-aff9-4872-8da6-2ebebdf7ef78}</UniqueIdentifier>
     </Filter>
@@ -32,6 +29,12 @@
     </Filter>
     <Filter Include="Physics">
       <UniqueIdentifier>{4b92bbec-b3c7-41c9-9da0-637aa6ed1fee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{6d181f74-61d9-4207-b2f7-560da2ecd43e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{8a665df5-3026-48d2-842f-1ee3c263674b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -67,12 +70,6 @@
     </ClInclude>
     <ClInclude Include="Core\System.h">
       <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Resources\Resource.h">
-      <Filter>Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Resources\ResourceManager.h">
-      <Filter>Resources</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Renderer.h">
       <Filter>Graphics</Filter>
@@ -134,6 +131,24 @@
     <ClInclude Include="Physics\ContactListener.h">
       <Filter>Physics</Filter>
     </ClInclude>
+    <ClInclude Include="Audio\AudioSystem.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\AudioChannel.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\Sound.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\Resource.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\ResourceManager.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\AudioComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -147,9 +162,6 @@
     </ClCompile>
     <ClCompile Include="Math\Vector2.cpp">
       <Filter>Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Resources\ResourceManager.cpp">
-      <Filter>Resources</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\Renderer.cpp">
       <Filter>Graphics</Filter>
@@ -198,6 +210,21 @@
     </ClCompile>
     <ClCompile Include="Physics\ContactListener.cpp">
       <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\AudioSystem.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\AudioChannel.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\ResourceManagercpp.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\Sound.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\AudioComponent.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
