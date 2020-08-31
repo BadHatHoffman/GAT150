@@ -3,11 +3,13 @@
 #include "Math/Transform.h"
 #include "Engine.h"
 #include <bitset>
+#include <list>
 #include <vector>
 
 namespace nc
 {
 	class Component;
+	class Scene;
 
 	class GameObject : public Object
 	{
@@ -67,6 +69,7 @@ namespace nc
 
 		Transform m_transform;
 		Engine* m_engine;
+		Scene* m_scene;
 
 	protected:
 		std::vector<Component*> m_components;

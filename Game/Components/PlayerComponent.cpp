@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "PlayerComponent.h"
 #include "Components/RigidBodyComponent.h"
+#include "Components/SpriteComponent.h"
 #include "Components/AudioComponent.h"
 
 namespace nc
@@ -47,6 +48,12 @@ namespace nc
 		if (component)
 		{
 			component->ApplyForce(force);
+
+			Vector2 velocity = component->GetVelocity();
+
+			SpriteComponent* spriteComponent = m_owner->GetComponent<SpriteComponent>();
+			if (velocity.x <= -0.15f) spriteComponent->Flip();
+			if (velocity.x >= 0.15f) spriteComponent->Flip(false);
 		}
 
 		auto coinContacts = m_owner->GetContactsWithTag("Coin");
@@ -54,5 +61,17 @@ namespace nc
 		{
 			contact->m_flags[GameObject::eFlags::DESTROY] = true;
 		}
+
+		//auto enemyContacts = m_owner->GetContactsWithTag("Enemy");
+		//for (GameObject* contact : coinContacts)
+		//{
+		//	AudioComponent* audioComponent = m_owner->GetComponent<AudioComponent>();
+		//	if (audioComponent)
+		//	{
+		//		
+		//		//play audio
+		//	}
+		//}
+
 	}
 }
