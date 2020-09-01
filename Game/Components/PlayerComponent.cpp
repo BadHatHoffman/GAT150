@@ -3,12 +3,16 @@
 #include "Components/RigidBodyComponent.h"
 #include "Components/SpriteComponent.h"
 #include "Components/AudioComponent.h"
+#include "Core/EventManager.h"
 
 namespace nc
 {
 	bool nc::PlayerComponent::Create(void* data)
 	{
 		m_owner = static_cast<GameObject*>(data);
+
+		EventManager::Instance().Subscribe("CollisionEnter", std::bind(&PlayerComponent::OnCollisionEnter, this, std::placeholders::_1), m_owner);
+		EventManager::Instance().Subscribe("CollisionEnter", std::bind(&PlayerComponent::OnCollisionExit, this, std::placeholders::_1), m_owner);
 		return true;
 	}
 
@@ -39,6 +43,7 @@ namespace nc
 			AudioComponent* audioComponent = m_owner->GetComponent<AudioComponent>();
 			if (audioComponent)
 			{
+				audioComponent->SetSoundName("Jump.wav");
 				audioComponent->Play();
 			}
 
@@ -62,16 +67,38 @@ namespace nc
 			contact->m_flags[GameObject::eFlags::DESTROY] = true;
 		}
 
-		//auto enemyContacts = m_owner->GetContactsWithTag("Enemy");
-		//for (GameObject* contact : coinContacts)
-		//{
-		//	AudioComponent* audioComponent = m_owner->GetComponent<AudioComponent>();
-		//	if (audioComponent)
-		//	{
-		//		
-		//		//play audio
-		//	}
-		//}
+	}
+	void PlayerComponent::OnCollisionEnter(const Event& event)
+	{
+		GameObject* gameObject = dynamic_cast<GameObject*>(event.sender);
 
+		if (gameObject->m_tag == "Enemy")
+		{
+			AudioComponent* audioComponent = m_owner->GetComponent<AudioComponent>();
+			audioComponent->SetSoundName("Grunt.wav");
+			audioComponent->Play();
+
+			m_owner->m_flags[GameObject::eFlags::DESTROY] = true;
+
+			//send player dead event
+			Event event;
+			event.type = "PlayerDead";
+			EventManager::Instance().Notify(event);
+		}
+
+		if (gameObject->m_tag == "Coin")
+		{
+			AudioComponent* audioComponent = m_owner->GetComponent<AudioComponent>();
+			audioComponent->SetSoundName("Coin.wav");
+			audioComponent->Play();
+			gameObject->m_flags[GameObject::eFlags::DESTROY] = true;
+		}
+
+		//std::cout << "collision enter: " << gameObject->m_name << std::endl;
+	}
+	void PlayerComponent::OnCollisionExit(const Event& event)
+	{
+		GameObject* gameObject = dynamic_cast<GameObject*>(event.sender);
+		//std::cout << "collision exit: " << gameObject->m_name << std::endl;
 	}
 }

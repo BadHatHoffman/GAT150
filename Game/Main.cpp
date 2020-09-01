@@ -3,6 +3,7 @@
 #include "Engine.h"
 #include "Objects/GameObject.h"
 #include "Core/Json.h"
+#include "Core/EventManager.h"
 #include "Components/PlayerComponent.h"
 #include "Components/Enemy.h"
 #include "Objects/ObjectFactory.h"
@@ -13,6 +14,11 @@ nc::Engine engine;
 nc::Scene scene;
 //nc::ObjectFactory objectFactory;
 
+void GameEvent(const nc::Event& event)
+{
+	std::cout << "PlayerDead!!!!\n";
+}
+
 int main(int, char**)
 {
 	engine.Startup();
@@ -21,6 +27,8 @@ int main(int, char**)
 	nc::ObjectFactory::Instance().Initialize();
 	nc::ObjectFactory::Instance().Register("PlayerComponent", new nc::Creator<nc::PlayerComponent, nc::Object> );
 	nc::ObjectFactory::Instance().Register("Enemy", new nc::Creator<nc::Enemy, nc::Object> );
+
+	nc::EventManager::Instance().Subscribe("PlayerDead", &GameEvent);
 
 	rapidjson::Document document;
 	nc::json::Load("scene.txt", document);
